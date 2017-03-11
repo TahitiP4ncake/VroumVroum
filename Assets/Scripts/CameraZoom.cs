@@ -9,7 +9,7 @@ public class CameraZoom : MonoBehaviour {
 
     private Vector3 leMilieu;
     private float zoom;
-    private float smoothTime = 0.3f;
+    //private float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetPosition;
     // Use this for initialization

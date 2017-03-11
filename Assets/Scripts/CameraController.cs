@@ -10,8 +10,8 @@ public class CameraController : MonoBehaviour {
     private float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetPosition;
-    private bool dezoom;
-    private bool zoom;
+    //private bool dezoom;
+    //private bool zoom;
 
     public GameObject generator;
     public Renderer R_car;
@@ -88,38 +88,40 @@ public class CameraController : MonoBehaviour {
             leMilieu = leMilieu / (GameObject.FindGameObjectsWithTag("Player").Length);
         int dehors = 0;
         int dedans = 0;
+        
         foreach (GameObject Car in lesVoitures)
         {
+            
             //Debug.Log(Car);
             Vector3 screenPos = GetComponent<Camera>().WorldToScreenPoint(Car.transform.position);
             //float test = Vector3.Distance(screenPos, transform.position);
             //Debug.Log(Screen.width / 100 * 80);
-            float _hauteur = Vector3.Distance(transform.position, leMilieu);
-            float _ecart = Vector3.Distance(new Vector3(leMilieu.x, 0, leMilieu.z), new Vector3(Car.transform.position.x, 0, Car.transform.position.z));
+           // float _hauteur = Vector3.Distance(transform.position, leMilieu);
+           // float _ecart = Vector3.Distance(new Vector3(leMilieu.x, 0, leMilieu.z), new Vector3(Car.transform.position.x, 0, Car.transform.position.z));
             //Debug.Log(Vector3.Distance(new Vector3(leMilieu.x, 0, leMilieu.z), new Vector3(Car.transform.position.x, 0, Car.transform.position.z)));
             
             if (screenPos.x<=( GetComponent<Camera>().pixelWidth/ 100*10)|| screenPos.x>= (GetComponent<Camera>().pixelWidth / 100*90)|| screenPos.y<= (GetComponent<Camera>().pixelHeight / 100*10)|| screenPos.y>=(GetComponent<Camera>().pixelHeight / 100*90))
             {
-                dezoom = true;
+                //dezoom = true;
                 Debug.Log("dezoom");
                 //zoom = false;
                 dehors += 1;
             }
             else
             {
-                dezoom = false;
+                //dezoom = false;
             }
             
             if (screenPos.x>= (GetComponent<Camera>().pixelWidth / 100*30)&& screenPos.x<=( GetComponent<Camera>().pixelWidth / 100*70)&& screenPos.y>= (GetComponent<Camera>().pixelHeight / 100*30 )&& screenPos.y<= (GetComponent<Camera>().pixelHeight / 100*70))
             {
                 dedans += 1;
-                zoom = true;
+                //zoom = true;
                 Debug.Log("zoom");
                // dezoom = false;
             }
             else
             {
-                zoom = false;
+                //zoom = false;
             }
             
             /*
@@ -128,7 +130,9 @@ public class CameraController : MonoBehaviour {
                 dezoom = true;
             }
             */
+            
         }
+    
         //leMilieu.x += 50;
         
         

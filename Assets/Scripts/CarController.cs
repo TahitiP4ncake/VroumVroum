@@ -22,7 +22,7 @@ public class CarController : MonoBehaviour
     public float Frein;
     public float Flip;
     public float tolerance=100;
-
+    private bool sol;
     private bool BUMP;
 
     private GamepadManager manager;
@@ -38,9 +38,12 @@ public class CarController : MonoBehaviour
     public Collider boost;
     private bool boostOn;
     public x360_Gamepad gamepad;
-    private Quaternion bonneOrientation;
+    //private Quaternion bonneOrientation;
     public int papa;
-    
+
+    private float flipAmount;
+    private float flipTampon;
+
     private void Awake()
     {
         Car = GetComponent<Rigidbody>();
@@ -61,65 +64,98 @@ public class CarController : MonoBehaviour
         distToGround = C_car.bounds.extents.y+1;
         //Debug.Log(distToGround);
         Turbo.Pause();
-        bonneOrientation = transform.rotation;
+        //bonneOrientation = transform.rotation;
     }
     void Update()
     {
+        Debug.Log(Car.transform.eulerAngles.z);
+        //fail();
         //Debug.Log(Car.velocity.magnitude);
         //Debug.Log(boostOn);
         //float Lx = gamepad.GetStick_L().X;
-       // Debug.Log(gamepad.GetStick_L().X);
+        // Debug.Log(gamepad.GetStick_L().X);
         IsGrounded();
+
         //Debug.Log(Car.velocity);
-     //   decalage = new Vector3(0, Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180 / Mathf.PI, 0);
+        //   decalage = new Vector3(0, Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180 / Mathf.PI, 0);
         angle = transform.localEulerAngles.y;
         angle = (angle > 180) ? angle - 360 : angle;
         // Debug.Log("voiture" + angle);
         // Debug.Log("stick" + Mathf.Atan2(Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal")) * 180 / Mathf.PI);
 
-
-
-        if ((gamepad.GetStick_L().Y> 0.5 || gamepad.GetStick_L().Y < -0.5 || gamepad.GetStick_L().X < -0.5 || gamepad.GetStick_L().X > 0.5)&& auSol )
+        if (auSol && gamepad.GetButton("A") && (gamepad.GetStick_L().Y < 0.5 && gamepad.GetStick_L().Y > -0.5 && gamepad.GetStick_L().X > -0.5 && gamepad.GetStick_L().X < 0.5) && !gamepad.GetButton("B"))
         {
-            direction= new Vector3(0, Mathf.Atan2(gamepad.GetStick_L().Y, -gamepad.GetStick_L().X) * 180 / Mathf.PI, 0);
+
+            Move();
+            /*
+            if(Turbo.isStopped)
+            {
+                Turbo.Play();
+            }
+            */
+        }
+
+        if ((gamepad.GetStick_L().Y > 0.5 || gamepad.GetStick_L().Y < -0.5 || gamepad.GetStick_L().X < -0.5 || gamepad.GetStick_L().X > 0.5) && auSol)
+        {
+            direction = new Vector3(0, Mathf.Atan2(gamepad.GetStick_L().Y, -gamepad.GetStick_L().X) * 180 / Mathf.PI, 0);
             Turn();
             if (gamepad.GetButton("B") == false)
             {
                 Move();
             }
         }
-        
-         else
+
+        else
         {
             // Debug.Log(Car.velocity);
 
-            
-            if (auSol==false)
+
+            if (auSol == false)
             {
                 Car.velocity = new Vector3(Car.velocity.x, Car.velocity.y - 0.05f, Car.velocity.z);
-                Car.AddForce(Car.velocity*2f);
+                Car.AddForce(Car.velocity * 2f);
 
 
-                if (Car.velocity.magnitude<5)
+                if (Car.velocity.magnitude < 5)
                 {
+                    /*
+                    if(Car.transform.rotation.x<-80&&Car.transform.rotation.x>-100)
+                    {
+                        Debug.Log("arriere");
+                        Car.AddRelativeTorque(new Vector3(40, 0, 0), ForceMode.VelocityChange);
+                    }
+                    */
+                    //(!auSol)&&fail()
+                    //Car.velocity.magnitude<5
+                    /*
+                         Vector3 _good = new Vector3(0, Car.transform.rotation.y, 0);
+                         Vector3 _bad = new Vector3(Car.transform.rotation.x, Car.transform.rotation.y, Car.transform.rotation.z);
 
-                    Vector3 _good = new Vector3(0, Car.transform.rotation.y, 0);
-                    Vector3 _bad = new Vector3(Car.transform.rotation.x, Car.transform.rotation.y, Car.transform.rotation.z);
 
 
-
-                    Vector3 x = Vector3.Cross(_bad.normalized, _good.normalized);
-                    float theta = Mathf.Asin(x.magnitude);
-                    Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
-                    Quaternion q = transform.rotation * Car.inertiaTensorRotation;
-                    Vector3 T = q * Vector3.Scale(Car.inertiaTensor, (Quaternion.Inverse(q) * w));
-                    Car.AddTorque(T/100 , ForceMode.VelocityChange);
+                         Vector3 x = Vector3.Cross(_bad.normalized, _good.normalized);
+                         float theta = Mathf.Asin(x.magnitude);
+                         Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
+                         Quaternion q = transform.rotation * Car.inertiaTensorRotation;
+                         Vector3 T = q * Vector3.Scale(Car.inertiaTensor, (Quaternion.Inverse(q) * w));
+                         Car.AddTorque(T /75, ForceMode.VelocityChange);
+                     */
+                    /*
+                    if (Car.transform.rotation.z > 0)
+                    {
+                        Car.AddRelativeTorque(new Vector3(0, 0, -Car.transform.rotation.z), ForceMode.VelocityChange);
+                    }
+                    if(Car.transform.rotation.z<0)
+                    {
+                        Car.AddRelativeTorque(new Vector3(0, 0, Car.transform.rotation.z), ForceMode.VelocityChange);
+                    }
+                    */
                     //  transform.rotation = Quaternion.Slerp(transform.rotation, bonneOrientation, 0.1f * Time.deltaTime);
                 }
                 //StartCoroutine(up());
             }
-            
-           // float step = TurnSpeed * Time.deltaTime;
+
+            // float step = TurnSpeed * Time.deltaTime;
             //transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation, step/10);
             /*
                         while (Car.velocity.magnitude>0.1)
@@ -137,39 +173,78 @@ public class CarController : MonoBehaviour
             // Vector3 movement = Vector3.SmoothDamp(Car.velocity, Vector3.zero, ref currentV, Time.deltaTime);
             //Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
             Smoke.Stop();
-            
-            Turbo.Stop();
+            if ((!gamepad.GetButton("A")) || !auSol)
+            {
+                Turbo.Stop();
+            }
+
         }
-        if (gamepad.GetButton("B")&& auSol)
+        if (gamepad.GetButton("B") && auSol)
         {
             marcheArriere();
         }
-        if (gamepad.GetButton("X")&& auSol==false )
+        if (gamepad.GetButton("X"))
         {
             //Debug.Log("yep");
             BarrelRoll();
             //GetUp();
         }
-       if (gamepad.GetButton("L3"))
+        if (gamepad.GetButton("L3"))
         {
             //GetUp();
             Jump();
         }
-       
+
         if (gamepad.GetButtonDown("Y"))
         {
             Horn();
         }
-        
+
         m_MovementInputValue = gamepad.GetStick_L().Y;
         m_TurnInputValue = gamepad.GetStick_L().X;
 
         // OldTurn();
-        
-      
-             
 
+        if (sol)
+        {
+
+            if (Car.transform.eulerAngles.x > 80 && Car.transform.eulerAngles.x < 100)
+            {
+                //Debug.Log("DH ADSHGAU");
+                Car.AddTorque(new Vector3(-20, 0, 0), ForceMode.VelocityChange);
+
+            }
+            if (Car.transform.eulerAngles.x > 260 && Car.transform.eulerAngles.x < 280)
+            {
+
+                Car.AddTorque(new Vector3(20, 0, 0), ForceMode.VelocityChange);
+            }
+            if (Car.transform.eulerAngles.z > 80 && Car.transform.eulerAngles.z < 100)
+            {
+                Debug.Log("oi");
+                Car.AddTorque(new Vector3(0, 0, -20), ForceMode.VelocityChange);
+            }
+
+        }
     }
+    /*
+    IEnumerator getUp()
+    {
+        Vector3 _good = new Vector3(0, Car.transform.rotation.y, 0);
+        Vector3 _bad = new Vector3(Car.transform.rotation.x, Car.transform.rotation.y, Car.transform.rotation.z);
+
+
+
+        Vector3 x = Vector3.Cross(_bad.normalized, _good.normalized);
+        float theta = Mathf.Asin(x.magnitude);
+        Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
+        Quaternion q = transform.rotation * Car.inertiaTensorRotation;
+        Vector3 T = q * Vector3.Scale(Car.inertiaTensor, (Quaternion.Inverse(q) * w));
+        Car.AddTorque(T / 100, ForceMode.VelocityChange);
+
+        yield return new WaitUntil(auSol);
+    }
+    */
     private void Turn()
     {
 
@@ -180,8 +255,16 @@ public class CarController : MonoBehaviour
         // if ()
 
     }
+   
+
     private void FixedUpdate()
     {
+        if(!auSol)
+        {
+            //flipAmount += flipTampon - transform.rotation.x;
+        }
+
+
         // Move();
         /*Debug.Log(Car.rotation.z);
                   if((Car.rotation.z>0.65f ||Car.rotation.z<-0.65)&& auSol)
@@ -192,16 +275,20 @@ public class CarController : MonoBehaviour
         //Run();
         if (BUMP)
         {
+            Jump();
+            
             //Debug.Log("oi");
+            /*
             Car.AddForce(new Vector3(0,Car.velocity.magnitude), ForceMode.Impulse);
             BUMP = false;
+            */
         }
     }
     private void marcheArriere()
     {
         float _hauteur = Car.velocity.y * Time.deltaTime;
         Vector3 movement = transform.forward * -Speed * Time.deltaTime;
-        movement = -movement / 1.5f;
+        movement = -movement;
 
         movement.y = _hauteur;
         if (gamepad.GetButton("A"))
@@ -217,6 +304,10 @@ public class CarController : MonoBehaviour
             Smoke.Play();
             Turbo.Stop();
 
+        }
+        if (boostOn == true)
+        {
+            movement = movement * 3.5f;
         }
         Car.AddForce(movement, ForceMode.Impulse);
     }
@@ -384,10 +475,50 @@ public class CarController : MonoBehaviour
         }
 
     }
+    void OnCollisionStay(Collision ground)
+    {
+        if(ground.gameObject.tag=="LD"&& auSol==false)
+        {
+            sol = true;
+            //Debug.Log("OUIIIIIII");
+        }
+        else
+        {
+            sol = false;
+        }
+    }
     private void Run()
     {
         Car.velocity = (new Vector3(-m_TurnInputValue * Speed,0, m_MovementInputValue * Speed));
             }
+    /*
+    private bool fail()
+    {
+        
+        if(((Physics.Raycast(transform.position, transform.up, distToGround + tolerance))|| 
+            Physics.Raycast(transform.position, transform.right, distToGround + tolerance)||
+            Physics.Raycast(transform.position, -transform.right, distToGround + tolerance)||
+            Physics.Raycast(transform.position, transform.forward, 4)||
+            Physics.Raycast(transform.position, -transform.forward, distToGround + tolerance))
+            && Car.transform.position.y<12)
+        {
+            Debug.Log("par terre");
+            return true;
+        }
+        */
+        /*
+        if(ground.gameObject.tag == "LD")
+        {
+            Debug.Log("oui");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
+    */
     private void IsGrounded()
     {
         
@@ -405,24 +536,35 @@ public class CarController : MonoBehaviour
     }
     private void BarrelRoll()
     {
+       
         //float _turn = Input.GetAxis("Horizontal");
-        Car.AddRelativeTorque(new Vector3(1, 0, 0) * Flip );
+        if (auSol)
+        {
+            Car.AddForce(transform.up * 1.5f, ForceMode.VelocityChange);
+
+            StartCoroutine(getDown());
+        }
+        Car.AddRelativeTorque(new Vector3(1, 0, 0) ,ForceMode.VelocityChange );
         
     }
     private void Jump()
     {
         if(auSol)
         {
-            Car.AddForce(transform.up*1.5f, ForceMode.VelocityChange);
+            Debug.Log("hoi");
+            Car.AddForce(transform.up*12, ForceMode.VelocityChange);
             
             StartCoroutine(getDown());
         }
-        Car.AddRelativeTorque(new Vector3(0, 0, 1), ForceMode.VelocityChange);
+       
+        
+            Car.AddRelativeTorque(new Vector3(0, 0, 30), ForceMode.VelocityChange);
+        BUMP = false;
     }
     IEnumerator getDown()
     {
         yield return new WaitForSecondsRealtime(1.2f);
-        Car.AddRelativeForce(new Vector3(0,-1,0),ForceMode.Impulse) ;
+        Car.AddRelativeForce(new Vector3(0,-2,0),ForceMode.Impulse) ;
         //Debug.Log("stop");
     }
 /*
@@ -460,12 +602,31 @@ IEnumerator inactif()
         Debug.Log("deconnecte toi");
     }
     /*
-    IEnumerator up()
+    IEnumerator flip();
     {
-        0, Car.transform.rotation.y,0
-        yield return new WaitForSecondsRealtime(0.1f);
+
     }
     */
+    /*
+    IEnumerator getUp()
+    {
+        
+        yield return new WaitForSecondsRealtime(0.5f);
+        Vector3 _good = new Vector3(0, Car.transform.rotation.y, 0);
+        Vector3 _bad = new Vector3(Car.transform.rotation.x, Car.transform.rotation.y, Car.transform.rotation.z);
+
+
+
+        Vector3 x = Vector3.Cross(_bad.normalized, _good.normalized);
+        float theta = Mathf.Asin(x.magnitude);
+        Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
+        Quaternion q = transform.rotation * Car.inertiaTensorRotation;
+        Vector3 T = q * Vector3.Scale(Car.inertiaTensor, (Quaternion.Inverse(q) * w));
+        Car.AddTorque(T / 50, ForceMode.VelocityChange);
+        yield return new WaitForSecondsRealtime(0.5f);
+    }
+    */
+    
 }
 
 
@@ -481,4 +642,4 @@ IEnumerator inactif()
  Car.AddRelativeForce(direction);
  */
 
-    
+
