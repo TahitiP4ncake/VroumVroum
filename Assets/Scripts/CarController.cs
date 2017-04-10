@@ -68,9 +68,10 @@ public class CarController : MonoBehaviour
     }
     void Update()
     {
+        Debug.Log(Car.velocity.magnitude);
         //Debug.Log(Physics.Raycast(transform.position, -Vector3.up, (distToGround + tolerance) * 10));
-       // Debug.Log(Car.transform.localEulerAngles.x);
-        Debug.Log(Car.transform.localEulerAngles.z);
+        // Debug.Log(Car.transform.localEulerAngles.x);
+        //Debug.Log(Car.transform.localEulerAngles.z);
         //fail();
         //Debug.Log(Car.velocity.magnitude);
         //Debug.Log(boostOn);
@@ -96,6 +97,10 @@ public class CarController : MonoBehaviour
             }
             */
         }
+        else
+        {
+            Turbo.Stop();
+        }
 
         if ((gamepad.GetStick_L().Y > 0.5 || gamepad.GetStick_L().Y < -0.5 || gamepad.GetStick_L().X < -0.5 || gamepad.GetStick_L().X > 0.5) && auSol)
         {
@@ -109,18 +114,18 @@ public class CarController : MonoBehaviour
 
         else
         {
-            // Debug.Log(Car.velocity);
+            Smoke.Stop();
         }
 
-            if (auSol == false)
+         if (auSol == false)
             {
                 Car.velocity = new Vector3(Car.velocity.x, Car.velocity.y - 0.05f, Car.velocity.z);
                 Car.AddForce(Car.velocity * 2f);
-            /*
-            if (Car.velocity.magnitude > 5 || (Car.transform.eulerAngles.x))
+            
+            if (Car.velocity.magnitude < 5 )
             {
-                Car.velocity = new Vector3(Car.velocity.x, Car.velocity.y - 0.05f, Car.velocity.z);
-                Car.AddForce(Car.velocity * 2f);
+               // Car.velocity = new Vector3(Car.velocity.x, Car.velocity.y - 0.05f, Car.velocity.z);
+                //Car.AddForce(Car.velocity * 2f);
 
                 Vector3 _good = new Vector3(0, Car.transform.rotation.y, 0);
                 Vector3 _bad = new Vector3(Car.transform.rotation.x, Car.transform.rotation.y, Car.transform.rotation.z);
@@ -132,14 +137,15 @@ public class CarController : MonoBehaviour
                 Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
                 Quaternion q = transform.rotation * Car.inertiaTensorRotation;
                 Vector3 T = q * Vector3.Scale(Car.inertiaTensor, (Quaternion.Inverse(q) * w));
-                Car.AddTorque(T / 1000, ForceMode.Force);
+                Car.AddTorque(T / 75, ForceMode.VelocityChange);
 
             }
-            */
+            
             /*
             if (Car.velocity.magnitude < 5)
             {
             */
+            /*
             if (sol && Physics.Raycast(transform.position, -Vector3.up, (distToGround + tolerance)*10))
             {
                 if (Car.transform.localEulerAngles.x < -80 && Car.transform.localEulerAngles.x > -100)
@@ -161,6 +167,7 @@ public class CarController : MonoBehaviour
                     Car.AddRelativeTorque(new Vector3(0, 0, 40), ForceMode.VelocityChange);
                 }
             }
+            */
                 /*
                 //(!auSol)&&fail()
                 if (Car.velocity.magnitude < 5)
@@ -211,6 +218,7 @@ public class CarController : MonoBehaviour
             // Vector3 movement = Vector3.SmoothDamp(Car.velocity, Vector3.zero, ref currentV, Time.deltaTime);
             //Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
             Smoke.Stop();
+            Turbo.Stop();
             if ((!gamepad.GetButton("A")) || !auSol)
             {
                 Turbo.Stop();

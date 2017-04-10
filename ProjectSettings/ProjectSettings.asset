@@ -4,14 +4,14 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  productGUID: ab5a294ba20c4e24282df2ac5bb830bc
+  productGUID: 148a9034a254c6c448930d83b3c3f081
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: lavoiture
+  productName: VroumVroum
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 1}
@@ -385,14 +385,14 @@ PlayerSettings:
   additionalIl2CppArgs: 
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: lavoiture
+  metroPackageName: VroumVroum
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: lavoiture
+  metroApplicationDescription: VroumVroum
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -417,7 +417,7 @@ PlayerSettings:
   tizenGPSPermissions: 0
   tizenMicrophonePermissions: 0
   tizenDeploymentTarget: 
-  tizenDeploymentTargetType: 0
+  tizenDeploymentTargetType: -256
   tizenMinOSVersion: 0
   n3dsUseExtSaveData: 0
   n3dsCompressStaticMem: 1
@@ -459,9 +459,8 @@ PlayerSettings:
   XboxOneAllowedProductIds: []
   XboxOnePersistentLocalStorageSize: 0
   vrEditorSettings: {}
-  cloudServicesEnabled:
-    UNet: 1
-  cloudProjectId: 8160c051-a2fe-49d5-8594-52da8b83ea16
-  projectName: lavoiture
-  organizationId: tymus
+  cloudServicesEnabled: {}
+  cloudProjectId: 
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
